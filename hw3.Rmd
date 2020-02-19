@@ -4,6 +4,7 @@ output:
   html_document:
     df_print: paged
 name: Ann Gould
+github: gould-ann
 ---
 
 
@@ -25,13 +26,13 @@ print(numParty)
 print(tips)
 print(names(tips))
 ```
-total_bill: total sum of bill
-tip: tip included 
-size: # of people in party
-sex: gender of waiter/waitress
-smoker: if the waiter/waitress smoked
-day: day of the week going out
-time: specific meal
+total_bill: total sum of bill: double
+tip: tip included: double
+size: # of people in party: int
+sex: gender of person paying bill: category
+smoker: if the person paying bill: category
+day: day of the week going out: category
+time: specific meal: category
 
 3.
 ```{r}
@@ -41,10 +42,8 @@ print(newdata)
 
 4.
 ```{r}
-data <- tips %>%
-  group_by(sex) %>%
-  summarise(day_visits = sum(total_bill))
-print(data)
+female5 <- tips[tips$size >= 5 & tips$sex == "Female",  ]
+print(female5)
   
 ```
 5.
@@ -60,10 +59,50 @@ There is a lot of data in the lower aspect of the graph, which makes it more dif
 
 7.
 ```{r}
+
+tip_rate <- tips$tip / tips$total_bill
 data <- tips %>%
-  summarise(tiprate = mean(tip))
-print(data)
+  summarise(tiprate = mean(tip)) 
+
+data2 <- tips %>%
+  summarise(billrate = mean(total_bill))
+
+avg_tip_rate <- data$tiprate/data2$billrate
+print(avg_tip_rate)
 ```
-The average tip for the dataset is 2.998279.
+The rate is: about 15%
 
+8.
 
+```{r}
+my_plot <- ggplot(data = tips, aes(x = tips$time, y=tip_rate))
+my_plot + geom_boxplot()
+```
+
+This shows that the average tips are higher for lunch than they are for dinner, but there are more outliers in the ladder part of the data because the mean line is lower on the lunch line. The dinner tips are better distributed. The median between the two is almost the same.
+
+9.
+```{r}
+
+female <- tips[tips$sex == "Female",  ]
+male <- tips[tips$sex == "Male",  ]
+
+my_plot <- ggplot(data=female, aes(x=total_bill, y=tip, color=smoker))
+my_plot + geom_point()
+
+my_plot <- ggplot(data=male, aes(x=total_bill, y=tip, color=smoker))
+my_plot + geom_point()
+
+```
+A lot of the females had lower bills, which meant less tips.
+
+Women who are smokers appear to tip less than women who are not smokers. There does not appear to be much of a correlation for men in regards to if they smoke or not when paying
+
+10.
+```{r}
+my_plot <- ggplot(data=tips, aes(x=tips$day, fill=tips$sex))
+
+my_plot + geom_bar()
+```
+
+Men are more likely to pay the bill on Saturday and Sunday. Women are more likely to pay on Thursdays. On Fridays men and women both are as likely to pay the bill as the other person.
