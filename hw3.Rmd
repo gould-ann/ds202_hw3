@@ -1,0 +1,69 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+name: Ann Gould
+---
+
+
+```{r}
+data(tips, package="reshape2")
+library(dplyr)
+library(ggplot2)
+
+```
+
+1. 
+```{r}
+numParty <- nrow(tips)
+print(numParty)
+```
+
+2. 
+```{r}
+print(tips)
+print(names(tips))
+```
+total_bill: total sum of bill
+tip: tip included 
+size: # of people in party
+sex: gender of waiter/waitress
+smoker: if the waiter/waitress smoked
+day: day of the week going out
+time: specific meal
+
+3.
+```{r}
+newdata <- tips[order(tips$day, decreasing = TRUE),] 
+print(newdata)
+```
+
+4.
+```{r}
+data <- tips %>%
+  group_by(sex) %>%
+  summarise(day_visits = sum(total_bill))
+print(data)
+  
+```
+5.
+```{r}
+plot(tips)
+
+```
+
+The lower the bill, the lower the tip typically and vice versa. Linear regression-like line.
+
+6.
+There is a lot of data in the lower aspect of the graph, which makes it more difficult to predict later data. There also exists some outliers of people who tip really well/very poorly.
+
+7.
+```{r}
+data <- tips %>%
+  summarise(tiprate = mean(tip))
+print(data)
+```
+The average tip for the dataset is 2.998279.
+
+
